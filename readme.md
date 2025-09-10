@@ -25,12 +25,66 @@ python query_iceberg_gcs.py
 
 The data exposed using this repo is currently limited to project repo contributors and contributor commit counts
 
-Table: contributor_repo_commits_v2
-                          column_name               column_type null   key default extra
-0  contributor_unique_id_builder_love                   VARCHAR  YES  None    None  None
-1                                repo                   VARCHAR  YES  None    None  None
-2           contributor_contributions                    BIGINT  YES  None    None  None
-3                      data_timestamp  TIMESTAMP WITH TIME ZONE  YES  None    None  None
+Table Schema: public_research.contributor_repo_commits_v2
+column_name
+
+column_type
+
+null
+
+key
+
+default
+
+extra
+
+contributor_unique_id_builder_love
+
+VARCHAR
+
+YES
+
+None
+
+None
+
+None
+
+repo
+
+VARCHAR
+
+YES
+
+None
+
+None
+
+None
+
+contributor_contributions
+
+BIGINT
+
+YES
+
+None
+
+None
+
+None
+
+data_timestamp
+
+TIMESTAMP WITH TIME ZONE
+
+YES
+
+None
+
+None
+
+None
 
 *column descriptions*
 - contributor_unique_id_builder_love: a best-effort attempt to create unique ids for contributors. For logged-in github users, value is set as concatenate github login + id. For anon users, concatenate github name + email. Unfortunately, the id contains duplicates. Feedback welcome, but may be unavoidable.  
