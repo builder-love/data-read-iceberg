@@ -9,7 +9,10 @@ This repo provides a simple way to interact with the builder.love data warehouse
 
 ### Steps
 - request a storage bucket read access key from trevor@builder.love
-- set key id and key value as environment variables: gcs_access_key and gcs_secret_key
+- clone this repo to your local machine
+- create a .env file at the root of the project
+- set key id and key value as environment variables in the .env file: gcs_access_key and gcs_secret_key
+- confirm the .env file, with the appropriate path, is in your .gitignore
 - recommended to create a virtual environment using pyenv and install requirements using uv
 ``` 
 pyenv virtualenv 3.13.5 my_venv
@@ -36,7 +39,7 @@ The data exposed using this repo is currently limited to project repo contributo
 
 
 *column descriptions*
-- contributor_unique_id_builder_love: a best-effort attempt to create unique ids for contributors. For logged-in github users, value is set as concatenate github login + id. For anon users, concatenate github name + email. Unfortunately, the id contains duplicates. Feedback welcome, but may be unavoidable.  
+- contributor_unique_id_builder_love: a best-effort attempt to create unique ids for contributors. For logged-in github users, value is set as the concatenation of github login + id. For anon users, concatenate github name + email. Unfortunately, the id contains duplicates. Feedback welcome, but duplicates may be unavoidable.  
 - repo: the code repo. The contributor dataset contains only github repos. 
 - contributor_contributions: number of commits. The endpoint is defined [here](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-contributors)
 - data_timestamp: date queried from github rest api
