@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- Configuration ---
-# The full path to the Iceberg table directory in GCS.
-ICEBERG_TABLE_PATH = "gs://bl-dataproc-resources/warehouse/public_research/contributor_repo_commits_v2"
+# The full path to the Iceberg table directories in GCS.
+ICEBERG_REPO_CONTRIBUTIONS_TABLE_PATH = "gs://bl-dataproc-resources/warehouse/public_research/contributor_repo_commits_v2"
+ICEBERG_CONTRIBUTORS_TABLE_PATH = "gs://bl-dataproc-resources/warehouse/public_research/contributors"
 
-def query_iceberg_in_gcs():
+# pass in the table path as a parameter
+def query_iceberg_table(table_path: str):
     """
     Connects to a GCS bucket using DuckDB's Iceberg extension,
     configures authentication using environment variables, and queries the table.
@@ -50,10 +52,10 @@ def query_iceberg_in_gcs():
 
     try:
         # --- Query 1: Describe the table to view column types ---
-        print(f"\n--- Describing schema for table '{ICEBERG_TABLE_PATH}' ---")
+        print(f"\n--- Describing schema for table '{table_path}' ---")
         describe_query = f"""
         DESCRIBE SELECT *
-        FROM iceberg_scan('{ICEBERG_TABLE_PATH}')
+        FROM iceberg_scan('{table_path}')
         LIMIT 0; -- We don't need any data, just the schema
         """
         schema_df = con.execute(describe_query).fetch_df()
@@ -61,10 +63,10 @@ def query_iceberg_in_gcs():
         print(schema_df)
 
         # --- Query 2: Get a small sample of the data ---
-        print(f"\n--- Querying a sample of 10 rows from '{ICEBERG_TABLE_PATH}' ---")
+        print(f"\n--- Querying a sample of 10 rows from '{table_path}' ---")
         query = f"""
         SELECT *
-        FROM iceberg_scan('{ICEBERG_TABLE_PATH}')
+        FROM iceberg_scan('{table_path}')
         LIMIT 10;
         """
         sample_df = con.execute(query).fetch_df()
@@ -72,10 +74,10 @@ def query_iceberg_in_gcs():
         print(sample_df)
 
         # --- Query 3: Get the total row count ---
-        print(f"\n--- Querying total row count from '{ICEBERG_TABLE_PATH}' ---")
+        print(f"\n--- Querying total row count from '{table_path}' ---")
         count_query = f"""
         SELECT COUNT(*) AS total_rows
-        FROM iceberg_scan('{ICEBERG_TABLE_PATH}');
+        FROM iceberg_scan('{table_path}');
         """
         row_count = con.execute(count_query).fetch_df()
         print("Query successful. Total rows:")
@@ -92,7 +94,7 @@ def query_iceberg_in_gcs():
     except duckdb.Error as e:
         print(f"\nAn error occurred while querying the Iceberg table: {e}")
         print("Please check the following:")
-        print("1. The ICEBERG_TABLE_PATH is correct.")
+        print(f"1. The table path {table_path} is correct.")
         print("2. The HMAC keys have the correct permissions ('Storage Object Viewer' or higher).")
         print("3. Your network connection allows access to storage.googleapis.com.")
 
@@ -101,6 +103,5 @@ def query_iceberg_in_gcs():
         con.close()
         print("\nINFO:     Connection closed.")
 
-
 if __name__ == "__main__":
-    query_iceberg_in_gcs()
+    query_iceberg_table(ICEBERG_CONTRIBUTORS_TABLE_PATH)
