@@ -7,7 +7,7 @@ load_dotenv()
 
 # --- Configuration ---
 # The full path to the Iceberg table directories in GCS.
-ICEBERG_REPO_CONTRIBUTIONS_TABLE_PATH = "gs://bl-dataproc-resources/warehouse/public_research/contributor_repo_commits_v2"
+ICEBERG_REPO_CONTRIBUTIONS_TABLE_PATH = "gs://bl-dataproc-resources/warehouse/public_research/contributor_repo_commits_v3"
 ICEBERG_CONTRIBUTORS_TABLE_PATH = "gs://bl-dataproc-resources/warehouse/public_research/contributors"
 
 # pass in the table path as a parameter
@@ -104,4 +104,4 @@ def query_iceberg_table(table_path: str):
         print("\nINFO:     Connection closed.")
 
 if __name__ == "__main__":
-    query_iceberg_table(ICEBERG_CONTRIBUTORS_TABLE_PATH)
+    query_iceberg_table(ICEBERG_REPO_CONTRIBUTIONS_TABLE_PATH)
